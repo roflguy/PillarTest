@@ -1,0 +1,39 @@
+﻿@model List<PillarTest.Models.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Categories</h2>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    №
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Name)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@for (int i = 0; i < Model.Count; i++) {
+        <tr>
+            <td>
+                @(i + 1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model[i].Name)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id= Model[i].Id  }) |
+                @Html.ActionLink("Delete", "Delete", new { id= Model[i].Id })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

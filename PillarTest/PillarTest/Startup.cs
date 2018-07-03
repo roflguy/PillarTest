@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PillarTest.Models;
 
 namespace PillarTest
 {
@@ -22,6 +24,9 @@ namespace PillarTest
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=Notifications;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<NotificationContext>(options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +50,12 @@ namespace PillarTest
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<NotificationContext>();
+                context.Database.EnsureCreated();
+            }
         }
     }
 }
