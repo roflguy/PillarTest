@@ -23,6 +23,7 @@ namespace PillarTest.Controllers
         {
             var notifications = _context.Notifications
                 .Include(n => n.Category)
+                .Where(n => n.Expired > DateTime.Now)
                 .ToList();
 
             return View(notifications);
